@@ -22,12 +22,6 @@ env=Environment(CPPPATH = '',
                 LIBS = [],
                 CXXFLAGS = [])
 
-platform = platform.system()
-print("Compiling on: " + platform)
-
-if platform == 'Linux':
-    env.Append(CXXFLAGS = [ '-std=c++11' ])
-
 # -----------------------------------------------------------------------------
 # Build flags
 # -----------------------------------------------------------------------------
