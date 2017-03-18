@@ -30,3 +30,6 @@
 
 # SCons files
 .sconsign.dblite
+
+# VS.code files
+.vscode
