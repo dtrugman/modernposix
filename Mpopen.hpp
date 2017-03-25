@@ -21,6 +21,8 @@
 
 #include <stdio.h>
 
+#include <string>
+
 namespace mp
 {
 
