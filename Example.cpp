@@ -20,7 +20,7 @@
 
 using namespace std;
 
-int main()
+void impopen()
 {
     mopo::impopen reader("hostname");
 
@@ -29,6 +29,19 @@ int main()
     {
         cout << line << endl;
     }
+}
+
+void ompopen()
+{
+    mopo::ompopen writer("wall");
+
+    writer << "testing" << " " << "modern output popen" << "\n";
+}
+
+int main()
+{
+    impopen();
+    ompopen();
 
     return 0;
 }
