@@ -35,15 +35,19 @@ public: // D'tors
 public: // Operators
     operator bool() const
     {
-        return (NULL != _fd);
+        return _active;
     }
 
 protected: // C'tors
     mpopen(const std::string & command, const std::string & type)
         : _fd(NULL)
     {
-        open(command, type);
+        _active = open(command, type);
     }
+
+protected: // Members
+    FILE * _fd;
+    bool   _active;
 
 private: // Methods
     inline bool open(const std::string & command, const std::string & type)
@@ -56,19 +60,39 @@ private: // Methods
 
         return true;
     }
-
-private: // Members
-    FILE * _fd;
 };
 
 class impopen : public mpopen
 {
 public: // C'tors
-    impopen(const std::string & command)
-        : mpopen(command, "r")
+    impopen(const std::string & command, size_t bufferSize = DEFAULT_BUFFER_SIZE)
+        : mpopen(command, "r"), _bufferSize(bufferSize)
     {
         // Do nothing
     }
+
+public: // Operators
+    impopen & operator>>(std::string & line)
+    {
+        if (_active)
+        {
+            char buffer[_bufferSize];
+            _active = (fgets(buffer, sizeof(buffer), _fd) != NULL);
+            if (_active)
+            {
+                line.assign(buffer);
+                line[line.size() - 1] = '\0'; // Trim the newline at the end
+            }
+        }
+        
+        return *this;
+    }
+
+private: // Consts
+    static const size_t DEFAULT_BUFFER_SIZE = 1024;
+
+private: // Members
+    const size_t _bufferSize;
 };
 
 class ompopen : public mpopen
