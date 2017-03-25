@@ -24,5 +24,11 @@ int main()
 {
     mopo::impopen reader("hostname");
 
+    std::string line;
+    while (reader >> line)
+    {
+        cout << line << endl;
+    }
+
     return 0;
 }
