@@ -24,24 +24,10 @@
 namespace mopo
 {
 
-class Popen
+class mpopen
 {
-public: // Types
-    enum Type
-    {
-        READ,
-        WRITE
-    };
-
-public: // C'tors & D'tors
-    Popen(const std::string & command, Type type)
-        : _fd(NULL), _type(type)
-    {
-        if (!validate(command, type)) return;
-        if (!open(command, type) return;
-    }
-
-    virtual ~Popen()
+public: // D'tors
+    virtual ~mpopen()
     {
         if (NULL != _fd) (void)pclose(_fd);
     }
@@ -49,32 +35,20 @@ public: // C'tors & D'tors
 public: // Operators
     operator bool() const
     {
-        return (NULL != fd);
+        return (NULL != _fd);
     }
 
-private:
-    inline bool validate(const std::string & command, Type type)
+protected: // C'tors
+    mpopen(const std::string & command, const std::string & type)
+        : _fd(NULL)
     {
-        switch(type)
-        {
-            case READ:
-            case WRITE:
-                // Everything is OK
-                break;
-            
-            default:
-                RETURN_OR_THROW_EX(false, std::runtime_error, "Bad type specified");
-        }
-
-        return true;
+        open(command, type);
     }
 
-    inline bool open(const std::string & command, Type type)
+private: // Methods
+    inline bool open(const std::string & command, const std::string & type)
     {
-        const char * c = command.c_str();
-        const char * t = (type == READ) ? "r" : "w";
-
-        _fd = popen(c, t);
+        _fd = popen(command.c_str(), type.c_str());
         if (NULL == _fd)
         {
             RETURN_OR_THROW_EX(false, std::runtime_error, "Underlying popen failed, fork(), pipe() or memory allocation error");
@@ -83,9 +57,28 @@ private:
         return true;
     }
 
-private:
+private: // Members
     FILE * _fd;
-    Type   _type;
+};
+
+class impopen : public mpopen
+{
+public: // C'tors
+    impopen(const std::string & command)
+        : mpopen(command, "r")
+    {
+        // Do nothing
+    }
+};
+
+class ompopen : public mpopen
+{
+public: // C'tors
+    ompopen(const std::string & command)
+        : mpopen(command, "w")
+    {
+        // Do nothing
+    }
 };
 
 } // namespace mopo
