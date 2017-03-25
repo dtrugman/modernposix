@@ -91,7 +91,6 @@ public: // Operators
             if (_active)
             {
                 line.assign(buffer);
-                line[line.size() - 1] = '\0'; // Trim the newline at the end
             }
         }
         
