@@ -52,3 +52,14 @@ example = env.Program(  target = example_app,
 example_alias = Alias('example', [example], example[0].abspath)
 AlwaysBuild(example_alias)
 
+# -----------------------------------------------------------------------------
+# Build tests
+# -----------------------------------------------------------------------------
+test_files = Glob('Test*.cpp')
+test_app = 'Test'
+
+test = env.Program( target = test_app,
+                    source = test_files)
+
+test_alias = Alias('test', [test], test[0].abspath)
+AlwaysBuild(test_alias)
