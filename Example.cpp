@@ -22,7 +22,7 @@ using namespace std;
 
 void impopen()
 {
-    mopo::impopen reader("hostname");
+    mp::impopen reader("hostname");
 
     std::string line;
     while (reader >> line)
@@ -33,7 +33,7 @@ void impopen()
 
 void ompopen()
 {
-    mopo::ompopen writer("wall");
+    mp::ompopen writer("wall");
 
     writer << "testing" << " " << "modern output popen" << "\n";
 }

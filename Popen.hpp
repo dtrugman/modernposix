@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 
-namespace mopo
+namespace mp
 {
 
 class mpopen
@@ -129,6 +129,6 @@ public: // Operators
     }
 };
 
-} // namespace mopo
+} // namespace mp
 
 #endif // MODERN_POPEN_HPP
