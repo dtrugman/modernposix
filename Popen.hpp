@@ -29,13 +29,21 @@ class mpopen
 public: // D'tors
     virtual ~mpopen()
     {
-        if (NULL != _fd) (void)pclose(_fd);
+        close();        
     }
 
 public: // Operators
     operator bool() const
     {
         return _active;
+    }
+
+public: // Methods
+    void close()
+    {
+        _active = false;
+
+        if (NULL != _fd) (void)pclose(_fd);
     }
 
 protected: // C'tors
@@ -102,6 +110,22 @@ public: // C'tors
         : mpopen(command, "w")
     {
         // Do nothing
+    }
+
+public: // Operators
+    ompopen & operator<<(const char * buffer)
+    {
+        if (_active)
+        {
+            _active = (fputs(buffer, _fd) != EOF);
+        }
+
+        return *this;
+    }
+
+    ompopen & operator<<(std::string & buffer)
+    {
+        return *this << buffer.c_str();
     }
 };
 
