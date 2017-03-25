@@ -26,19 +26,30 @@ namespace mopo
 
 class Popen
 {
-public:
+public: // Types
     enum Type
     {
         READ,
         WRITE
     };
 
-public:
+public: // C'tors & D'tors
     Popen(const std::string & command, Type type)
         : _fd(NULL), _type(type)
     {
         if (!validate(command, type)) return;
         if (!open(command, type) return;
+    }
+
+    virtual ~Popen()
+    {
+        if (NULL != _fd) (void)pclose(_fd);
+    }
+
+public: // Operators
+    operator bool() const
+    {
+        return (NULL != fd);
     }
 
 private:
