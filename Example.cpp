@@ -16,9 +16,13 @@
 
 #include <iostream>
 
+#include "Popen.hpp"
+
 using namespace std;
 
 int main()
 {
+    mopo::impopen reader("hostname");
+
     return 0;
 }
