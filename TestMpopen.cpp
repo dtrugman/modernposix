@@ -22,20 +22,52 @@
 
 using namespace std;
 
-TEST_CASE("Input modern popen", "[popen]")
+TEST_CASE("Modern popen", "[popen]")
 {
     char hostname[1024];
     hostname[sizeof(hostname) - 1] = '\0';
     gethostname(hostname, sizeof(hostname) - 1);
 
-    SECTION("Get hostname")
+    SECTION("Input")
     {
-        mp::impopen reader("hostname");
-        
-        std::string line;
-        reader >> line;
-        line.erase(line.size() - 1);
+        SECTION("Single line")
+        {
+            mp::impopen reader("hostname");
+            
+            std::string line;
+            reader >> line;
+            line.erase(line.size() - 1);
 
-        REQUIRE(line.compare(hostname) == 0);
+            REQUIRE(line.compare(hostname) == 0);
+        }
+
+        SECTION("Multi line")
+        {
+            mp::impopen reader("ls -1");
+            
+            std::vector<std::string> output;
+            reader >> output;
+            
+            bool foundTestMain, foundTestMpopen;
+            foundTestMain = foundTestMpopen = false;
+
+            std::vector<std::string>::const_iterator it;
+            for (it = output.begin(); it != output.end(); ++it)
+            {
+                if (it->compare("TestMain.cpp\n") == 0)
+                {
+                    foundTestMain = true;
+                }
+
+                if (it->compare("TestMpopen.cpp\n") == 0)
+                {
+                    foundTestMpopen = true;
+                }
+            }
+
+            REQUIRE(foundTestMain);
+            REQUIRE(foundTestMpopen);
+        }
     }
 }
+
