@@ -20,7 +20,7 @@
 
 using namespace std;
 
-void impopen()
+void impopenReadByLine()
 {
     mp::impopen reader("hostname");
 
@@ -28,6 +28,20 @@ void impopen()
     while (reader >> line)
     {
         cout << line << endl;
+    }
+}
+
+void impopenReadAll()
+{
+    mp::impopen reader("ls -l");
+
+    std::vector<std::string> output;
+    reader >> output;
+
+    std::vector<std::string>::const_iterator it;
+    for (it = output.begin(); it != output.end(); ++it)
+    {
+        cout << *it;
     }
 }
 
@@ -40,7 +54,9 @@ void ompopen()
 
 int main()
 {
-    impopen();
+    impopenReadByLine();
+    impopenReadAll();
+
     ompopen();
 
     return 0;
