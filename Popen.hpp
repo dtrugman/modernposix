@@ -43,25 +43,25 @@ public: // Methods
     {
         _active = false;
 
-        if (NULL != _fd) (void)pclose(_fd);
+        if (NULL != _fp) (void)pclose(_fp);
     }
 
 protected: // C'tors
     mpopen(const std::string & command, const std::string & type)
-        : _fd(NULL)
+        : _fp(NULL)
     {
         _active = open(command, type);
     }
 
 protected: // Members
-    FILE * _fd;
+    FILE * _fp;
     bool   _active;
 
 private: // Methods
     inline bool open(const std::string & command, const std::string & type)
     {
-        _fd = popen(command.c_str(), type.c_str());
-        if (NULL == _fd)
+        _fp = popen(command.c_str(), type.c_str());
+        if (NULL == _fp)
         {
             RETURN_OR_THROW_EX(false, std::runtime_error, "Underlying popen failed, fork(), pipe() or memory allocation error");
         }
@@ -85,7 +85,7 @@ public: // Operators
         if (_active)
         {
             char buffer[_bufferSize];
-            _active = (fgets(buffer, sizeof(buffer), _fd) != NULL);
+            _active = (fgets(buffer, sizeof(buffer), _fp) != NULL);
             if (_active)
             {
                 line.assign(buffer);
@@ -117,7 +117,7 @@ public: // Operators
     {
         if (_active)
         {
-            _active = (fputs(buffer, _fd) != EOF);
+            _active = (fputs(buffer, _fp) != EOF);
         }
 
         return *this;
