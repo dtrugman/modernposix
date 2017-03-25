@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 
+#include <vector>
 #include <string>
 
 namespace mp
@@ -94,6 +95,17 @@ public: // Operators
             }
         }
         
+        return *this;
+    }
+
+    impopen & operator>>(std::vector<std::string> & output)
+    {
+        std::string line;
+        while (*this >> line)
+        {
+            output.push_back(line);
+        }
+
         return *this;
     }
 
