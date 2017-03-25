@@ -69,5 +69,23 @@ TEST_CASE("Modern popen", "[popen]")
             REQUIRE(foundTestMpopen);
         }
     }
+
+    SECTION("Input & Output")
+    {
+        SECTION("Single line")
+        {
+            {
+                mp::ompopen writer("cat > test.txt");
+                writer << "modern posix";
+            }
+
+            mp::impopen reader("cat test.txt; rm test.txt");
+            
+            std::string line;
+            reader >> line;
+
+            REQUIRE(line.compare("modern posix") == 0);
+        }
+    }
 }
 
