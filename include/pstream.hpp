@@ -32,7 +32,14 @@ class pstream // aka process stream
 public: // D'tors
     virtual ~pstream()
     {
-        close();        
+        try
+        {
+            close();
+        }
+        catch (std::runtime_error & ex)
+        {
+            // Prevents exception from leaving destructor
+        }
     }
 
 public: // Operators
@@ -42,15 +49,24 @@ public: // Operators
     }
 
 public: // Methods
-    inline void close()
+    int close()
     {
-        _active = false;
-
-        if (NULL != _fp)
+        if (NULL == _fp)
         {
-            (void)pclose(_fp); // TODO: Handle pclose failure
-            _fp = NULL;
+            // We are already closed
+            return 0;
         }
+
+        int exitcode = pclose(_fp);
+        if (-1 == exitcode)
+        {
+            RETURN_OR_THROW_EX(exitcode, std::runtime_error, "Underlying pclose failed");
+        }
+
+        _fp = NULL;
+        _active = false;
+        
+        return exitcode;
     }
 
 protected: // C'tors
