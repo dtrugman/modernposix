@@ -16,13 +16,13 @@
 
 #include <iostream>
 
-#include "Mpopen.hpp"
+#include "../include/pstream.hpp"
 
 using namespace std;
 
-void impopenReadByLine()
+void ipstreamReadByLine()
 {
-    mp::impopen reader("hostname");
+    mp::ipstream reader("hostname");
 
     std::string line;
     while (reader >> line)
@@ -31,9 +31,9 @@ void impopenReadByLine()
     }
 }
 
-void impopenReadAll()
+void ipstreamReadAll()
 {
-    mp::impopen reader("ls -l");
+    mp::ipstream reader("ls -l");
 
     std::vector<std::string> output;
     reader >> output;
@@ -45,19 +45,19 @@ void impopenReadAll()
     }
 }
 
-void ompopen()
+void opstream()
 {
-    mp::ompopen writer("wall");
+    mp::opstream writer("wall");
 
     writer << "testing" << " " << "modern output popen" << "\n";
 }
 
 int main()
 {
-    impopenReadByLine();
-    impopenReadAll();
+    ipstreamReadByLine();
+    ipstreamReadAll();
 
-    ompopen();
+    opstream();
 
     return 0;
 }

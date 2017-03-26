@@ -14,10 +14,10 @@
     limitations under the License.
 */
 
-#ifndef MODERN_POPEN_HPP
-#define MODERN_POPEN_HPP
+#ifndef MP_PROCESS_STREAM_HPP
+#define MP_PROCESS_STREAM_HPP
 
-#include "Config.hpp"
+#include "config.hpp"
 
 #include <stdio.h>
 
@@ -27,30 +27,34 @@
 namespace mp
 {
 
-class mpopen
+class pstream // aka process stream
 {
 public: // D'tors
-    virtual ~mpopen()
+    virtual ~pstream()
     {
         close();        
     }
 
 public: // Operators
-    operator bool() const
+    inline operator bool() const
     {
         return _active;
     }
 
 public: // Methods
-    void close()
+    inline void close()
     {
         _active = false;
 
-        if (NULL != _fp) (void)pclose(_fp);
+        if (NULL != _fp)
+        {
+            (void)pclose(_fp); // TODO: Handle pclose failure
+            _fp = NULL;
+        }
     }
 
 protected: // C'tors
-    mpopen(const std::string & command, const std::string & type)
+    pstream(const std::string & command, const std::string & type)
         : _fp(NULL)
     {
         _active = open(command, type);
@@ -73,17 +77,17 @@ private: // Methods
     }
 };
 
-class impopen : public mpopen
+class ipstream : public pstream
 {
 public: // C'tors
-    impopen(const std::string & command, size_t bufferSize = DEFAULT_BUFFER_SIZE)
-        : mpopen(command, "r"), _bufferSize(bufferSize)
+    ipstream(const std::string & command, size_t bufferSize = DEFAULT_BUFFER_SIZE)
+        : pstream(command, "r"), _bufferSize(bufferSize)
     {
         // Do nothing
     }
 
 public: // Operators
-    impopen & operator>>(std::string & line)
+    ipstream & operator>>(std::string & line)
     {
         if (_active)
         {
@@ -98,7 +102,7 @@ public: // Operators
         return *this;
     }
 
-    impopen & operator>>(std::vector<std::string> & output)
+    ipstream & operator>>(std::vector<std::string> & output)
     {
         std::string line;
         while (*this >> line)
@@ -116,17 +120,17 @@ private: // Members
     const size_t _bufferSize;
 };
 
-class ompopen : public mpopen
+class opstream : public pstream
 {
 public: // C'tors
-    ompopen(const std::string & command)
-        : mpopen(command, "w")
+    opstream(const std::string & command)
+        : pstream(command, "w")
     {
         // Do nothing
     }
 
 public: // Operators
-    ompopen & operator<<(const char * buffer)
+    opstream & operator<<(const char * buffer)
     {
         if (_active)
         {
@@ -136,7 +140,7 @@ public: // Operators
         return *this;
     }
 
-    ompopen & operator<<(std::string & buffer)
+    opstream & operator<<(std::string & buffer)
     {
         return *this << buffer.c_str();
     }
@@ -144,4 +148,4 @@ public: // Operators
 
 } // namespace mp
 
-#endif // MODERN_POPEN_HPP
+#endif // MP_PROCESS_STREAM_HPP

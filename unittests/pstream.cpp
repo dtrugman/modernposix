@@ -16,13 +16,13 @@
 
 #include "catch.hpp"
 
-#include "Mpopen.hpp"
+#include "../include/pstream.hpp"
 
 #include <unistd.h>
 
 using namespace std;
 
-TEST_CASE("Modern popen", "[popen]")
+TEST_CASE("Process stream", "[pstream]")
 {
     char hostname[1024];
     hostname[sizeof(hostname) - 1] = '\0';
@@ -32,7 +32,7 @@ TEST_CASE("Modern popen", "[popen]")
     {
         SECTION("Single line")
         {
-            mp::impopen reader("hostname");
+            mp::ipstream reader("hostname");
             
             std::string line;
             reader >> line;
@@ -43,30 +43,30 @@ TEST_CASE("Modern popen", "[popen]")
 
         SECTION("Multi line")
         {
-            mp::impopen reader("ls -1");
+            mp::ipstream reader("ls -1 unittests"); // Runs from root directory
             
             std::vector<std::string> output;
             reader >> output;
             
-            bool foundTestMain, foundTestMpopen;
-            foundTestMain = foundTestMpopen = false;
+            bool foundTestMain, foundTestPstream;
+            foundTestMain = foundTestPstream = false;
 
             std::vector<std::string>::const_iterator it;
             for (it = output.begin(); it != output.end(); ++it)
             {
-                if (it->compare("TestMain.cpp\n") == 0)
+                if (it->compare("main.cpp\n") == 0)
                 {
                     foundTestMain = true;
                 }
 
-                if (it->compare("TestMpopen.cpp\n") == 0)
+                if (it->compare("pstream.cpp\n") == 0)
                 {
-                    foundTestMpopen = true;
+                    foundTestPstream = true;
                 }
             }
 
             REQUIRE(foundTestMain);
-            REQUIRE(foundTestMpopen);
+            REQUIRE(foundTestPstream);
         }
     }
 
@@ -75,11 +75,11 @@ TEST_CASE("Modern popen", "[popen]")
         SECTION("Single line")
         {
             {
-                mp::ompopen writer("cat > test.txt");
+                mp::opstream writer("cat > test.txt");
                 writer << "modern posix";
             }
 
-            mp::impopen reader("cat test.txt; rm test.txt");
+            mp::ipstream reader("cat test.txt; rm test.txt");
             
             std::string line;
             reader >> line;

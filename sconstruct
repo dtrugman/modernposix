@@ -43,11 +43,9 @@ print("Compiling using: " + env['CXX'])
 # -----------------------------------------------------------------------------
 # Build example
 # -----------------------------------------------------------------------------
-example_files = [ 'Example.cpp' ]
-example_app = 'Example'
+example_files = Glob('examples/*.cpp')
 
-example = env.Program(  target = example_app,
-                        source = example_files)
+example = env.Program(source = example_files)
 
 example_alias = Alias('example', [example], example[0].abspath)
 AlwaysBuild(example_alias)
@@ -55,11 +53,9 @@ AlwaysBuild(example_alias)
 # -----------------------------------------------------------------------------
 # Build tests
 # -----------------------------------------------------------------------------
-test_files = Glob('Test*.cpp')
-test_app = 'Test'
+test_files = Glob('unittests/*.cpp')
 
-test = env.Program( target = test_app,
-                    source = test_files)
+test = env.Program(source = test_files)
 
 test_alias = Alias('test', [test], test[0].abspath)
 AlwaysBuild(test_alias)
