@@ -20,32 +20,32 @@
 
 using namespace std;
 
-void ipstreamReadByLine()
+void ipstream_readline()
 {
     mp::ipstream reader("hostname");
 
-    std::string line;
+    string line;
     while (reader >> line)
     {
         cout << line << endl;
     }
 }
 
-void ipstreamReadAll()
+void ipstream_readall()
 {
     mp::ipstream reader("ls -l");
 
-    std::vector<std::string> output;
+    vector<string> output;
     reader >> output;
 
-    std::vector<std::string>::const_iterator it;
+    vector<string>::const_iterator it;
     for (it = output.begin(); it != output.end(); ++it)
     {
         cout << *it;
     }
 }
 
-void opstream()
+void opstream_write()
 {
     mp::opstream writer("wall");
 
@@ -54,10 +54,10 @@ void opstream()
 
 int main()
 {
-    ipstreamReadByLine();
-    ipstreamReadAll();
+    ipstream_readline();
+    ipstream_readall();
 
-    opstream();
+    opstream_write();
 
     return 0;
 }
