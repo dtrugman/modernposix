@@ -54,7 +54,7 @@ TEST_CASE("Process stream", "[pstream]")
             std::vector<std::string>::const_iterator it;
             for (it = output.begin(); it != output.end(); ++it)
             {
-                if (it->compare("main.cpp\n") == 0)
+                if (it->compare("test.cpp\n") == 0)
                 {
                     foundTestMain = true;
                 }
