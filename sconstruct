@@ -19,7 +19,7 @@ import platform
 # -----------------------------------------------------------------------------
 env=Environment(CPPPATH = '',
                 CPPDEFINES = [],
-                LIBS = [],
+                LIBS = [ '-ldl' ],
                 CXXFLAGS = [])
 
 # -----------------------------------------------------------------------------
@@ -43,12 +43,9 @@ print("Compiling using: " + env['CXX'])
 # -----------------------------------------------------------------------------
 # Build example
 # -----------------------------------------------------------------------------
-example_files = Glob('examples/*.cpp')
-
-example = env.Program(source = example_files)
-
-example_alias = Alias('example', [example], example[0].abspath)
-AlwaysBuild(example_alias)
+examples = Glob('examples/*.cpp')
+for example in examples:
+    ex = env.Program(source = example)
 
 # -----------------------------------------------------------------------------
 # Build tests
