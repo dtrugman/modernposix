@@ -19,7 +19,9 @@
 
 #include "config.hpp"
 
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
+#include <cerrno>
 
 #include <vector>
 #include <string>
@@ -60,7 +62,7 @@ public: // Methods
         int exitcode = pclose(_fp);
         if (-1 == exitcode)
         {
-            MP_RETURN_OR_THROW_EX(exitcode, std::runtime_error, "Underlying pclose failed");
+            MP_RETURN_OR_THROW_EX(exitcode, std::runtime_error, error());
         }
 
         _fp = NULL;
@@ -76,6 +78,12 @@ protected: // C'tors
         _active = open(command, type);
     }
 
+protected: // Methods
+    inline const char * error()
+    {
+        return strerror(errno);
+    }
+
 protected: // Members
     FILE * _fp;
     bool   _active;
@@ -86,7 +94,7 @@ private: // Methods
         _fp = popen(command.c_str(), type.c_str());
         if (NULL == _fp)
         {
-            MP_RETURN_OR_THROW_EX(false, std::runtime_error, "Underlying popen failed, fork(), pipe() or memory allocation error");
+            MP_RETURN_OR_THROW_EX(false, std::runtime_error, error());
         }
 
         return true;
