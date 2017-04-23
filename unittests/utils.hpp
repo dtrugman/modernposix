@@ -22,16 +22,17 @@
 #include "catch.hpp"
 
 #ifdef MP_NO_THROW
-    #define REQUIRE_FAILURE(type, ex, ..) \
+    #define REQUIRE_INIT_FAILURE(ex, type, name, ...) \
         try { \
-            REQUIRE(!(action)); \
+            type name(__VA_ARGS__); \
+            REQUIRE(!name); \
         } catch(ex & e) { \
             REQUIRE(false); \
         }
 #else // MP_NO_THROW
-    #define REQUIRE_FAILURE(action, ex) \
+    #define REQUIRE_INIT_FAILURE(ex, type, name, ...) \
         try { \
-            action; \
+            type name(__VA_ARGS__); \
             REQUIRE(false); \
         } catch(ex & e) { \
             REQUIRE(true); \

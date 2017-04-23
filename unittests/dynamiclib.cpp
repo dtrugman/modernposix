@@ -35,7 +35,7 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
 {
     SECTION("Load non-existing library")
     {
-        REQUIRE_FAILURE(mp::dynamiclib dlib(NON_EXISTING_LIB), std::runtime_error);
+        REQUIRE_INIT_FAILURE(std::runtime_error, mp::dynamiclib, dlib, NON_EXISTING_LIB);
     }
 
     SECTION("C library")
