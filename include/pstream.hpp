@@ -60,7 +60,7 @@ public: // Methods
         int exitcode = pclose(_fp);
         if (-1 == exitcode)
         {
-            RETURN_OR_THROW_EX(exitcode, std::runtime_error, "Underlying pclose failed");
+            MP_RETURN_OR_THROW_EX(exitcode, std::runtime_error, "Underlying pclose failed");
         }
 
         _fp = NULL;
@@ -86,7 +86,7 @@ private: // Methods
         _fp = popen(command.c_str(), type.c_str());
         if (NULL == _fp)
         {
-            RETURN_OR_THROW_EX(false, std::runtime_error, "Underlying popen failed, fork(), pipe() or memory allocation error");
+            MP_RETURN_OR_THROW_EX(false, std::runtime_error, "Underlying popen failed, fork(), pipe() or memory allocation error");
         }
 
         return true;

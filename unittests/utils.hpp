@@ -21,14 +21,14 @@
 
 #include "catch.hpp"
 
-#ifdef NO_THROW
+#ifdef MP_NO_THROW
     #define REQUIRE_FAILURE(type, ex, ..) \
         try { \
             REQUIRE(!(action)); \
         } catch(ex & e) { \
             REQUIRE(false); \
         }
-#else // NO_THROW
+#else // MP_NO_THROW
     #define REQUIRE_FAILURE(action, ex) \
         try { \
             action; \
@@ -36,6 +36,6 @@
         } catch(ex & e) { \
             REQUIRE(true); \
         }
-#endif // NO_THROW
+#endif // MP_NO_THROW
 
 #endif // MP_UNITTESTS_UTILS_HPP

@@ -14,12 +14,12 @@
     limitations under the License.
 */
 
-#ifndef MODERN_CONFIG_HPP
-#define MODERN_CONFIG_HPP
+#ifndef MP_CONFIG_HPP
+#define MP_CONFIG_HPP
 
 #include <stdexcept>
 
-namespace mopo
+namespace mp
 {
 
 /**
@@ -27,14 +27,14 @@ namespace mopo
  * the library handles errors by returning NULL values
  * or failing subsequent operations
  */
-//#define NO_THROW
+//#define MP_NO_THROW
 
-#ifdef NO_THROW
-    #define RETURN_OR_THROW_EX(retval, type, ...) return retval
+#ifdef MP_NO_THROW
+    #define MP_RETURN_OR_THROW_EX(retval, type, ...) return retval
 #else
-    #define RETURN_OR_THROW_EX(retval, type, ...) throw type(__VA_ARGS__)
+    #define MP_RETURN_OR_THROW_EX(retval, type, ...) throw type(__VA_ARGS__)
 #endif
 
-} // namespace mopo
+} // namespace mp
 
-#endif // MODERN_CONFIG_HPP
+#endif // MP_CONFIG_HPP

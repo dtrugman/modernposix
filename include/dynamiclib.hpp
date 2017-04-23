@@ -56,7 +56,7 @@ public: // Methods
 
         if (dlclose(_handle) != 0)
         {
-            RETURN_OR_THROW_EX(false, std::runtime_error, "Underlying dlclose failed");
+            MP_RETURN_OR_THROW_EX(false, std::runtime_error, "Underlying dlclose failed");
         }
         
         _handle = NULL;
@@ -92,7 +92,7 @@ private: // Methods
         _handle = dlopen(file.c_str(), mode);
         if (NULL == _handle)
         {
-            RETURN_OR_THROW_EX(false, std::runtime_error, error());
+            MP_RETURN_OR_THROW_EX(false, std::runtime_error, error());
         }
 
         return true;
