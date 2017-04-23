@@ -14,8 +14,8 @@
     limitations under the License.
 */
 
-#ifndef MP_CONFIG_HPP
-#define MP_CONFIG_HPP
+#ifndef MP_MODERN_POSIX_HPP
+#define MP_MODERN_POSIX_HPP
 
 #include <stdexcept>
 
@@ -27,7 +27,7 @@ namespace mp
  * the library handles errors by returning NULL values
  * or failing subsequent operations
  */
-//#define MP_NO_THROW
+#define MP_NO_THROW
 
 #ifdef MP_NO_THROW
     #define MP_RETURN_OR_THROW_EX(retval, type, ...) return retval
@@ -37,4 +37,4 @@ namespace mp
 
 } // namespace mp
 
-#endif // MP_CONFIG_HPP
+#endif // MP_MODERN_POSIX_HPP

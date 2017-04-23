@@ -17,7 +17,7 @@
 #ifndef MP_DYNAMIC_LIB_HPP
 #define MP_DYNAMIC_LIB_HPP
 
-#include "config.hpp"
+#include "modernposix.hpp"
 
 #include <dlfcn.h>
 

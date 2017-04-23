@@ -17,7 +17,7 @@
 #ifndef MP_PROCESS_STREAM_HPP
 #define MP_PROCESS_STREAM_HPP
 
-#include "config.hpp"
+#include "modernposix.hpp"
 
 #include <cstdio>
 #include <cstring>
