@@ -45,7 +45,7 @@ writer << "testing" << " " << "modern output popen" << "\n";
 
 ## Dynamic library wrapper
 
-This class simply wraps the dlopen(), dlsym(), dlclose() API, allowing easy access to dynamic libraries.
+This class simply wraps the dlopen(), dlsym(), dlclose() & dlerror() APIs, allowing easy access to dynamic libraries.
 
 The class assures that the library is closed upon destruction.
 
