@@ -63,10 +63,10 @@ public: // Methods
         return true;
     }
 
-    inline void error(std::string & err)
+    inline std::string error()
     {
-        char * errstr = error();
-        err = (NULL != errstr) ? errstr : "Unknown underlying error or error was already read";
+        const char * err = dlerror();
+        return (NULL != err) ? err : "Unknown underlying error or error was already read";
     }
 
     inline void * symbol(const std::string & name)
@@ -82,11 +82,6 @@ public: // Methods
     }
 
 private: // Methods
-    inline char * error()
-    {
-        return dlerror();
-    }
-
     inline bool open(const std::string & file, int mode)
     {
         _handle = dlopen(file.c_str(), mode);

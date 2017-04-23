@@ -34,9 +34,7 @@ void dynamiclib()
         Multiply multiply = (Multiply)dlib.symbol("multiply");
         if (multiply == NULL)
         {
-            string err;
-            dlib.error(err);
-            throw std::runtime_error(err.c_str());
+            throw std::runtime_error(dlib.error());
         }
 
         int a, b;
