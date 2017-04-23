@@ -25,7 +25,6 @@ env=Environment(CPPPATH = '',
 # -----------------------------------------------------------------------------
 # Build flags
 # -----------------------------------------------------------------------------
-
 # Default values
 DEFAULT_DEBUG = 0 # Debugging off
 
@@ -41,7 +40,16 @@ if compiler:
 print("Compiling using: " + env['CXX'])
 
 # -----------------------------------------------------------------------------
-# Build example
+# Build utils
+# -----------------------------------------------------------------------------
+testlibc_files = 'utils/testlibc/testlib.c'
+testlibc = env.SharedLibrary(source = testlibc_files)
+
+testlibcpp_files = 'utils/testlibcpp/testlib.cpp'
+testlibcpp = env.SharedLibrary(source = testlibcpp_files)
+
+# -----------------------------------------------------------------------------
+# Build examples
 # -----------------------------------------------------------------------------
 examples = Glob('examples/*.cpp')
 for example in examples:
@@ -51,8 +59,7 @@ for example in examples:
 # Build tests
 # -----------------------------------------------------------------------------
 test_files = Glob('unittests/*.cpp')
-
-test = env.Program(source = test_files)
+test = env.Program(target = 'unittests/test', source = test_files)
 
 test_alias = Alias('test', [test], test[0].abspath)
 AlwaysBuild(test_alias)
