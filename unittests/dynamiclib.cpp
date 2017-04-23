@@ -18,8 +18,6 @@
 
 #include "../include/dynamiclib.hpp"
 
-#include "utils.hpp"
-
 #include "../utils/testlibc/testlib.h"
 #include "../utils/testlibcpp/testlib.hpp"
 
@@ -28,6 +26,7 @@
 using namespace std;
 
 static const char * NON_EXISTING_LIB = "libnonexisting.so";
+
 static const char * TEST_LIB_C = "utils/testlibc/libtestlib.so";
 static const char * TEST_LIB_CPP = "utils/testlibcpp/libtestlib.so";
 
@@ -35,7 +34,15 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
 {
     SECTION("Load non-existing library")
     {
-        REQUIRE_INIT_FAILURE(std::runtime_error, mp::dynamiclib, dlib, NON_EXISTING_LIB);
+        // We use heap allocation so dlib is still valid outside the REQUIRE_NOTHROW clause
+        mp::dynamiclib * dlib = NULL;
+#ifdef MP_NO_THROW
+        REQUIRE_NOTHROW(dlib = new mp::dynamiclib(NON_EXISTING_LIB));
+        REQUIRE_FALSE(*dlib);
+#else
+        REQUIRE_THROWS_AS(dlib = new mp::dynamiclib(NON_EXISTING_LIB), std::runtime_error);
+#endif
+        delete dlib;
     }
 
     SECTION("C library")
