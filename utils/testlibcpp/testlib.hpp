@@ -27,4 +27,7 @@ public:
     virtual int add(int a, int b);
 };
 
+typedef Tester * (*Create)();
+typedef void (*Destroy)(Tester *);
+
 #endif // MP_UNITTESTS_TEST_LIB_CPP_HPP

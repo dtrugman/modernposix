@@ -23,6 +23,8 @@ extern "C" {
 
 int multiply(int a, int b);
 
+typedef int (*Multiply)(int, int);
+
 #ifdef __cplusplus
 }
 #endif

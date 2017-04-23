@@ -20,6 +20,7 @@
 
 #include "utils.hpp"
 
+#include "../utils/testlibc/testlib.h"
 #include "../utils/testlibcpp/testlib.hpp"
 
 #include <unistd.h>
@@ -43,12 +44,10 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
         REQUIRE(dlib);
 
         SECTION("Use")
-        {
-            typedef int (*Multiply)(int, int);
-            
+        {            
             Multiply multiply = (Multiply)dlib.symbol("multiply");
-
             REQUIRE(multiply != NULL);
+
             REQUIRE(multiply(2,3) == 6);
         }
 
@@ -72,9 +71,6 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
 
         SECTION("Use")
         {
-            typedef Tester * (*Create)();
-            typedef void (*Destroy)(Tester *);
-
             Create create = (Create)dlib.symbol("create");
             REQUIRE(create != NULL);
 
