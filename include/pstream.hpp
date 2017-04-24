@@ -53,19 +53,19 @@ public: // Operators
 public: // Methods
     int close()
     {
-        if (NULL == _fp)
+        if (NULL == _fd)
         {
             // We are already closed
             return 0;
         }
 
-        int exitcode = pclose(_fp);
+        int exitcode = pclose(_fd);
         if (-1 == exitcode)
         {
             MP_RETURN_OR_THROW_EX(exitcode, std::runtime_error, error());
         }
 
-        _fp = NULL;
+        _fd = NULL;
         _active = false;
         
         return exitcode;
@@ -73,7 +73,7 @@ public: // Methods
 
 protected: // C'tors
     pstream(const std::string & command, const std::string & type)
-        : _fp(NULL)
+        : _fd(NULL)
     {
         _active = open(command, type);
     }
@@ -85,14 +85,14 @@ protected: // Methods
     }
 
 protected: // Members
-    FILE * _fp;
+    FILE * _fd;
     bool   _active;
 
 private: // Methods
     inline bool open(const std::string & command, const std::string & type)
     {
-        _fp = popen(command.c_str(), type.c_str());
-        if (NULL == _fp)
+        _fd = popen(command.c_str(), type.c_str());
+        if (NULL == _fd)
         {
             MP_RETURN_OR_THROW_EX(false, std::runtime_error, error());
         }
@@ -116,7 +116,7 @@ public: // Operators
         if (_active)
         {
             char buffer[_bufferSize];
-            _active = (fgets(buffer, sizeof(buffer), _fp) != NULL);
+            _active = (fgets(buffer, sizeof(buffer), _fd) != NULL);
             if (_active)
             {
                 line.assign(buffer);
@@ -158,7 +158,7 @@ public: // Operators
     {
         if (_active)
         {
-            _active = (fputs(buffer, _fp) != EOF);
+            _active = (fputs(buffer, _fd) != EOF);
         }
 
         return *this;
