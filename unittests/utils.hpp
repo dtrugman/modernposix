@@ -14,13 +14,10 @@
     limitations under the License.
 */
 
-#ifndef MP_DYNAMIC_LIB_HPP
-#define MP_DYNAMIC_LIB_HPP
+#ifndef MP_UNITTEST_UTILS_HPP
+#define MP_UNITTEST_UTILS_HPP
 
 #include "../include/modernposix.hpp"
-
-namespace mp
-{
 
 #define LENGTHOF(x) (sizeof(x)/sizeof((x)[0]))
 
@@ -42,15 +39,4 @@ namespace mp
         delete t;
 #endif // MP_NO_THROW
 
-// REQUIRE_INIT_SUCCESS definition
-// Expects no exceptions and tests the class' bool() operator
-
-#define REQUIRE_INIT_SUCCESS(type, var, ...) \
-    type * t = NULL; \
-    REQUIRE_NOTHROW(t = new type(__VA_ARGS__)); \
-    type & var = *t; \
-    REQUIRE(var);
-
-} // namespace mp
-
-#endif // MP_DYNAMIC_LIB_HPP
+#endif // MP_UNITTEST_UTILS_HPP

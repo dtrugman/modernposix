@@ -75,7 +75,8 @@ TEST_CASE("Directory stream", "[dstream]")
 
     SECTION("Read existing directory")
     {
-        REQUIRE_INIT_SUCCESS(mp::dstream, dir, TEST_DIR);
+        mp::dstream dir(TEST_DIR);
+        REQUIRE(dir);
 
         SECTION("Read single value")
         {
