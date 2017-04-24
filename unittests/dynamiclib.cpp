@@ -15,6 +15,7 @@
 */
 
 #include "catch.hpp"
+#include "utils.hpp"
 
 #include "../include/dynamiclib.hpp"
 
@@ -34,15 +35,7 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
 {
     SECTION("Load non-existing library")
     {
-        // We use heap allocation so dlib is still valid outside the REQUIRE_NOTHROW clause
-        mp::dynamiclib * dlib = NULL;
-#ifdef MP_NO_THROW
-        REQUIRE_NOTHROW(dlib = new mp::dynamiclib(NON_EXISTING_LIB));
-        REQUIRE_FALSE(*dlib);
-#else
-        REQUIRE_THROWS_AS(dlib = new mp::dynamiclib(NON_EXISTING_LIB), std::runtime_error);
-#endif
-        delete dlib;
+        REQUIRE_INIT_FAILURE(mp::dynamiclib, std::runtime_error, NON_EXISTING_LIB);
     }
 
     SECTION("C library")
