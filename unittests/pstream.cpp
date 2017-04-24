@@ -33,6 +33,7 @@ TEST_CASE("Process stream", "[pstream]")
         SECTION("Single line")
         {
             mp::ipstream reader("hostname");
+            REQUIRE(reader);
             
             std::string line;
             reader >> line;
@@ -44,7 +45,8 @@ TEST_CASE("Process stream", "[pstream]")
         SECTION("Multi line")
         {
             mp::ipstream reader("ls -1 unittests"); // Runs from root directory
-            
+            REQUIRE(reader);
+
             std::vector<std::string> output;
             reader >> output;
             
@@ -76,11 +78,13 @@ TEST_CASE("Process stream", "[pstream]")
         {
             {
                 mp::opstream writer("cat > test.txt");
+                REQUIRE(writer);
                 writer << "modern posix";
             }
 
             mp::ipstream reader("cat test.txt; rm test.txt");
-            
+            REQUIRE(reader);
+
             std::string line;
             reader >> line;
 
