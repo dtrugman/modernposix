@@ -52,15 +52,16 @@ The class assures that the library is closed upon destruction.
 You can also specify the type of initilization you require upon construction, default is LAZY and LOCAL, see `man dlopen(3)` for more information.
 
 ```cpp
-mp::dynamiclib dlib(TEST_LIB_C);
-
-Multiply multiply = (Multiply)dlib.symbol(TEST_LIB_C_MULTIPLY);
-if (multiply == NULL)
+try
 {
-    throw std::runtime_error(dlib.error());
+    mp::dynamiclib dlib(TEST_LIB_C);
+    Multiply multiply = (Multiply)dlib.symbol(TEST_LIB_C_MULTIPLY);
+    multiply(a,b);
 }
-
-multiply(a,b);
+catch (std::runtime_error & ex)
+{
+    // Something went wrong and ex.what() will tell you what it is
+}
 ```
 
 ## Installation

@@ -71,11 +71,15 @@ public: // Methods
 
     inline void * symbol(const std::string & name)
     {
-        void * addr = NULL;
-
-        if (NULL != _handle)
+        if (NULL == _handle)
         {
-            addr = dlsym(_handle, name.c_str());
+            MP_RETURN_OR_THROW_EX(NULL, std::runtime_error, "Library not loaded");
+        }
+
+        void * addr = dlsym(_handle, name.c_str());
+        if (NULL == addr)
+        {
+            MP_RETURN_OR_THROW_EX(NULL, std::runtime_error, error());
         }
 
         return addr;

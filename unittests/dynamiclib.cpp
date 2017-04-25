@@ -31,6 +31,8 @@ static const char * NON_EXISTING_LIB = "libnonexisting.so";
 static const char * TEST_LIB_C = "utils/testlibc/libtestlib.so";
 static const char * TEST_LIB_CPP = "utils/testlibcpp/libtestlib.so";
 
+static const char * NON_EXISTING_SYMBOL = "badsymbol";
+
 TEST_CASE("Dynamic library", "[dynamiclib]")
 {
     SECTION("Load non-existing library")
@@ -43,9 +45,16 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
         mp::dynamiclib dlib(TEST_LIB_C);
         REQUIRE(dlib);
 
+        SECTION("Load unexisting")
+        {
+            Multiply multiply;
+            REQUIRE_THROWS_AS(multiply = (Multiply)dlib.symbol(NON_EXISTING_SYMBOL), std::runtime_error);
+        }
+
         SECTION("Use")
         {            
-            Multiply multiply = (Multiply)dlib.symbol("multiply");
+            Multiply multiply;
+            REQUIRE_NOTHROW(multiply = (Multiply)dlib.symbol("multiply"));
             REQUIRE(multiply != NULL);
 
             REQUIRE(multiply(2,3) == 6);
@@ -69,12 +78,20 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
         mp::dynamiclib dlib(TEST_LIB_CPP);
         REQUIRE(dlib);
 
+        SECTION("Load unexisting")
+        {
+            Create create;
+            REQUIRE_THROWS_AS(create = (Create)dlib.symbol(NON_EXISTING_SYMBOL), std::runtime_error);
+        }
+
         SECTION("Use")
         {
-            Create create = (Create)dlib.symbol("create");
+            Create create;
+            REQUIRE_NOTHROW(create = (Create)dlib.symbol("create"));
             REQUIRE(create != NULL);
 
-            Destroy destroy = (Destroy)dlib.symbol("destroy");
+            Destroy destroy;
+            REQUIRE_NOTHROW(destroy = (Destroy)dlib.symbol("destroy"));
             REQUIRE(destroy != NULL);
             
             Tester * tester = create();

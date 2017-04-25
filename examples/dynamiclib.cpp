@@ -38,10 +38,6 @@ void dynamiclibc()
 
         // Multiply type defined in lib header file
         Multiply multiply = (Multiply)dlib.symbol(TEST_LIB_C_MULTIPLY);
-        if (multiply == NULL)
-        {
-            throw std::runtime_error(dlib.error());
-        }
 
         int a, b;
         cout << "Please enter two numbers: ";
@@ -60,19 +56,9 @@ void dynamiclibcpp()
     {
         mp::dynamiclib dlib(TEST_LIB_CPP);
 
-        // Create type defined in lib header file
+        // Create & Destroy types defined in lib header file
         Create create = (Create)dlib.symbol(TEST_LIB_CPP_CREATE);
-        if (create == NULL)
-        {
-            throw std::runtime_error(dlib.error());
-        }
-
-        // Destroy type defined in lib header file
         Destroy destroy = (Destroy)dlib.symbol(TEST_LIB_CPP_DESTROY);
-        if (destroy == NULL)
-        {
-            throw std::runtime_error(dlib.error());
-        }
 
         Tester * tester = create();
 
