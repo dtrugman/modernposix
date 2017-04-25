@@ -24,6 +24,8 @@ The streams handle the underlying file descriptors and spare the hassle from you
 
 The following snippet executes the 'ls -l' command and stores the output into a vector of strings.
 
+Find some working examples @ examples/pstream.cpp. Simple usage example:
+
 ```cpp
 mp::ipstream reader("ls -l");
 
@@ -36,6 +38,8 @@ reader >> output;
 The following snippet executes the 'wall' broadcast command and writes a message.
 
 Upon destruction the writer closes the stream and flushes the content.
+
+Find some working examples @ examples/pstream.cpp. Simple usage example:
 
 ```cpp
 mp::opstream writer("wall");
@@ -51,6 +55,8 @@ The class assures that the library is closed upon destruction.
 
 You can also specify the type of initilization you require upon construction, default is LAZY and LOCAL, see `man dlopen(3)` for more information.
 
+Find some working examples @ examples/dynamiclib.cpp. Simple usage example:
+
 ```cpp
 try
 {
@@ -61,6 +67,23 @@ try
 catch (std::runtime_error & ex)
 {
     // Something went wrong and ex.what() will tell you what it is
+}
+```
+
+## Directory stream wrapper
+
+This class simply wraps the opendir(), readdir(), rewinddir() & closedir() APIs, allowing easy access to directory entry enumeration.
+
+It assures proper handling of the underlying resources upon destruction.
+
+Find some working examples @ examples/dstream.cpp. Simple usage example:
+
+```cpp
+try
+{
+    mp::dstream ds(TEST_DIR);
+    set<string> output;
+    ds >> output;
 }
 ```
 
