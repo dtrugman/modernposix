@@ -81,7 +81,7 @@ Find some working examples @ examples/dstream.cpp. Simple usage example:
 ```cpp
 try
 {
-    mp::dstream ds(TEST_DIR);
+    mp::idstream ds(TEST_DIR);
     set<string> output;
     ds >> output;
 }
