@@ -20,11 +20,9 @@
 
 using namespace std;
 
-static const char * TEST_DIR = "utils/testdir";
-
-void dstream_readline()
+void idstream_readline(const string & dir)
 {
-    mp::dstream ds(TEST_DIR);
+    mp::idstream ds(dir);
 
     string entry;
     while (ds >> entry)
@@ -33,9 +31,10 @@ void dstream_readline()
     }
 }
 
-void dstream_readall()
+void idstream_readall(const string & dir)
 {
-    mp::dstream ds(TEST_DIR);
+
+    mp::idstream ds(dir);
 
     set<string> output;
     ds >> output;
@@ -49,8 +48,14 @@ void dstream_readall()
 
 int main()
 {
-    dstream_readline();
-    dstream_readall();
+    string dir;
+    cout << "Enter dir: ";
+    cin >> dir;
+
+    cout << "Reading line by line:" << endl;
+    idstream_readline(dir);
+    cout << endl << "Reading all at once:" << endl;
+    idstream_readall(dir);
 
     return 0;
 }

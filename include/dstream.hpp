@@ -32,13 +32,7 @@ namespace mp
 
 class dstream // aka directory stream
 {
-public: // C'tors & D'tors
-    dstream(const std::string & dirname)
-        : _fd(NULL)
-    {
-        _active = open(dirname);
-    }
-
+public: // D'tors
     virtual ~dstream()
     {
         try
@@ -55,32 +49,6 @@ public: // Operators
     inline operator bool() const
     {
         return _active;
-    }
-
-    dstream & operator>>(std::string & name)
-    {
-        if (_active)
-        {
-            const struct dirent * de = readdir(_fd);
-            _active = (de != NULL);
-            if (_active)
-            {
-                name = de->d_name;
-            }
-        }
-        
-        return *this;
-    }
-
-    dstream & operator>>(std::set<std::string> & output)
-    {
-        std::string name;
-        while (*this >> name)
-        {
-            output.insert(name);
-        }
-
-        return *this;
     }
 
 public: // Methods
@@ -109,13 +77,20 @@ public: // Methods
         rewinddir(_fd);
     }
 
+protected: // C'tors
+    dstream(const std::string & dirname)
+        : _fd(NULL)
+    {
+        _active = open(dirname);
+    }
+
 protected: // Methods
     inline const char * error()
     {
         return strerror(errno);
     }
 
-private: // Members
+protected: // Members
     DIR * _fd;
     bool  _active;
 
@@ -131,6 +106,49 @@ private: // Methods
         return true;
     }
 };
+
+class idstream : public dstream
+{
+public: // C'tors
+    idstream(const std::string & dirname)
+        : dstream(dirname)
+    {
+        // Do nothing
+    }
+
+public: // Operators
+    // Read line by line
+    // Order is not guaranteed
+    idstream & operator>>(std::string & name)
+    {
+        if (_active)
+        {
+            const struct dirent * de = readdir(_fd);
+            _active = (de != NULL);
+            if (_active)
+            {
+                name = de->d_name;
+            }
+        }
+        
+        return *this;
+    }
+
+    // Read all at once
+    // Order is guaranteed to be alphabetical
+    idstream & operator>>(std::set<std::string> & output)
+    {
+        std::string name;
+        while (*this >> name)
+        {
+            output.insert(name);
+        }
+
+        return *this;
+    }
+};
+
+// No odstream because there is no such thing in the POSIX API
 
 } // namespace mp
 

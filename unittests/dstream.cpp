@@ -68,68 +68,71 @@ bool hasAllEntriesSorted(const set<string> & entries)
 
 TEST_CASE("Directory stream", "[dstream]")
 {
-    SECTION("Unexisting directory")
+    SECTION("Input")
     {
-        REQUIRE_INIT_FAILURE(mp::dstream, std::runtime_error, NON_EXISTING_DIR);
-    }
-
-    SECTION("Read existing directory")
-    {
-        mp::dstream dir(TEST_DIR);
-        REQUIRE(dir);
-
-        SECTION("Read single value")
+        SECTION("Unexisting directory")
         {
-            // Order is not guarenteed, so we just make sure it's one of the entries
-
-            string entry;
-            dir >> entry;
-            REQUIRE(hasEntry(entry));
+            REQUIRE_INIT_FAILURE(mp::idstream, std::runtime_error, NON_EXISTING_DIR);
         }
 
-        SECTION("Read all, value by value")
+        SECTION("Read existing directory")
         {
-            // Order is not guarenteed, so we just make sure it's one of the entries
+            mp::idstream dir(TEST_DIR);
+            REQUIRE(dir);
 
-            bool found[LENGTHOF(TEST_DIR_ENTRIES)] = { 0 };
-
-            string entry;
-            while(dir >> entry)
+            SECTION("Read single value")
             {
-                int index = findEntry(entry);
-                CHECK(index != -1);
-                if (index != -1)
+                // Order is not guarenteed, so we just make sure it's one of the entries
+
+                string entry;
+                dir >> entry;
+                REQUIRE(hasEntry(entry));
+            }
+
+            SECTION("Read all, value by value")
+            {
+                // Order is not guarenteed, so we just make sure it's one of the entries
+
+                bool found[LENGTHOF(TEST_DIR_ENTRIES)] = { 0 };
+
+                string entry;
+                while(dir >> entry)
                 {
-                    CHECK(!found[index]);
-                    found[index] = true;
+                    int index = findEntry(entry);
+                    CHECK(index != -1);
+                    if (index != -1)
+                    {
+                        CHECK(!found[index]);
+                        found[index] = true;
+                    }
                 }
             }
-        }
 
-        SECTION("Read all at once")
-        {
-            // Order is guarenteed, as we use a set
+            SECTION("Read all at once")
+            {
+                // Order is guarenteed, as we use a set
 
-            set<string> entries;
-            dir >> entries;
-            REQUIRE(hasAllEntriesSorted(entries));
-        }
+                set<string> entries;
+                dir >> entries;
+                REQUIRE(hasAllEntriesSorted(entries));
+            }
 
-        SECTION("Rewind")
-        {
-            // Order is not guarenteed, so we just make sure it's one of the entries
+            SECTION("Rewind")
+            {
+                // Order is not guarenteed, so we just make sure it's one of the entries
 
-            string entry;
-            dir >> entry;
-            REQUIRE(hasEntry(entry));
+                string entry;
+                dir >> entry;
+                REQUIRE(hasEntry(entry));
 
-            dir.rewind();
+                dir.rewind();
 
-            // Order is guarenteed, as we use a set
+                // Order is guarenteed, as we use a set
 
-            set<string> entries;
-            dir >> entries;
-            REQUIRE(hasAllEntriesSorted(entries));
+                set<string> entries;
+                dir >> entries;
+                REQUIRE(hasAllEntriesSorted(entries));
+            }
         }
     }
 }
