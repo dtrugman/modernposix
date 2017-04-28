@@ -27,10 +27,17 @@ The following snippet executes the 'ls -l' command and stores the output into a 
 Find some working examples @ examples/pstream.cpp. Simple usage example:
 
 ```cpp
-mp::ipstream reader("ls -l");
+try
+{
+    mp::ipstream reader("ls -l");
 
-vector<string> output;
-reader >> output;
+    vector<string> output;
+    reader >> output;
+}
+catch (std::runtime_error & ex)
+{
+    // Something went wrong and ex.what() will tell you what it is
+}
 ```
 
 ### Output process stream (opstream) example
@@ -42,9 +49,16 @@ Upon destruction the writer closes the stream and flushes the content.
 Find some working examples @ examples/pstream.cpp. Simple usage example:
 
 ```cpp
-mp::opstream writer("wall");
+try
+{
+    mp::opstream writer("wall");
 
-writer << "testing" << " " << "modern output popen" << "\n";
+    writer << "testing" << " " << "modern output popen" << "\n";
+}
+catch (std::runtime_error & ex)
+{
+    // Something went wrong and ex.what() will tell you what it is
+}
 ```
 
 ## Dynamic library wrapper
@@ -84,6 +98,10 @@ try
     mp::idstream ds(TEST_DIR);
     set<string> output;
     ds >> output;
+}
+catch (std::runtime_error & ex)
+{
+    // Something went wrong and ex.what() will tell you what it is
 }
 ```
 
