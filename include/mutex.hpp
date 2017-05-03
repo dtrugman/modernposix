@@ -31,7 +31,7 @@ public:
 
 	bool tryLock()
 	{
-		return (pthread_mutex_trylock(&_mutex) == 0)? true:false;
+		return (pthread_mutex_trylock(&_mutex) == 0)?true:false;
 	}
 
 	void unlock()
