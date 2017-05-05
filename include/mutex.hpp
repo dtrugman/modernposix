@@ -8,7 +8,10 @@
 #ifndef MODERNPOSIX_INCLUDE_MUTEX_HPP_
 #define MODERNPOSIX_INCLUDE_MUTEX_HPP_
 
+#include <stdexcept>
 #include <pthread.h>
+
+using namespace std;
 
 class Mutex
 {
@@ -16,17 +19,26 @@ class Mutex
 public:
 	Mutex()
 	{
-		pthread_mutex_init(&_mutex, NULL);
+		if(pthread_mutex_init(&_mutex, NULL) < 0)
+		{
+			throw runtime_error("Mutex-error: Failed at initialization");
+		}
 	}
 
 	virtual ~Mutex()
 	{
-		pthread_mutex_destroy(&_mutex);
+		if(pthread_mutex_destroy(&_mutex) < 0)
+		{
+			throw runtime_error("Mutex-error: Failed at destruction");
+		}
 	}
 
 	void lock()
 	{
-		pthread_mutex_lock(&_mutex);
+		if(pthread_mutex_lock(&_mutex) < 0)
+		{
+			throw runtime_error("Mutex-error: Failed to lock");
+		}
 	}
 
 	bool tryLock()
@@ -36,7 +48,10 @@ public:
 
 	void unlock()
 	{
-		pthread_mutex_unlock(&_mutex);
+		if(pthread_mutex_unlock(&_mutex) < 0)
+		{
+			throw runtime_error("Mutex-error: Failed to unlock");
+		}
 	}
 
 private:
