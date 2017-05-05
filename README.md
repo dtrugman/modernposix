@@ -105,6 +105,45 @@ catch (std::runtime_error & ex)
 }
 ```
 
+## Mutex wrapper
+
+This class simply wraps the lock(..), trylock(..), unlock(..) APIs, allowing easy use of the POSIX mutex C API.
+
+Find some working examples @ examples/mutex.cpp. Simple usage example:
+
+```cpp
+try
+{
+	Mutex * myMutex = new Mutex();
+	myMutex->lock();
+	// Do some work
+	myMutex->unlock();
+}
+catch (std::runtime_error & ex)
+{
+    // Something went wrong and ex.what() will tell you what it is
+}
+```
+
+Another example:
+
+```cpp
+try
+{
+	Mutex * myMutex = new Mutex();
+	bool isLocked = myMutex->tryLock();
+	if(isLocked)
+	{
+		// Do some work
+		myMutex->unlock();
+	}
+}
+catch (std::runtime_error & ex)
+{
+    // Something went wrong and ex.what() will tell you what it is
+}
+```
+
 ## Installation
 
 Just add the files from the include directory to your project and compile.
