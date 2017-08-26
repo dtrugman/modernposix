@@ -5,64 +5,72 @@
  *      Author: Ben Agai
  */
 
-#ifndef MODERNPOSIX_INCLUDE_MUTEX_HPP_
-#define MODERNPOSIX_INCLUDE_MUTEX_HPP_
+#ifndef MP_MUTEX_HPP
+#define MP_MUTEX_HPP
+
+#include "modernposix.hpp"
 
 #include <stdexcept>
 #include <pthread.h>
 
 using namespace std;
 
-class Mutex
+namespace mp
 {
-//Functions
-public:
-	Mutex()
+
+class mutex
+{
+public: // C'tors
+	inline mutex()
 	{
-		if(pthread_mutex_init(&_mutex, NULL) < 0)
+		int retval = pthread_mutex_init(&_mutex, NULL);
+		if(retval != 0)
 		{
-			throw runtime_error("Mutex-error: Failed at initialization");
+			char * error = "Underlying mutex <init> failed";
+			MP_RETURN_OR_THROW_EX(retval, std::runtime_error, error);
 		}
 	}
 
-	virtual ~Mutex()
+public: // D'tors
+	inline virtual ~mutex()
 	{
-		if(pthread_mutex_destroy(&_mutex) < 0)
+		pthread_mutex_destroy(&_mutex);
+	}
+
+public: // Methods
+	inline void lock()
+	{
+		int retval = pthread_mutex_lock(&_mutex);
+		if(retval != 0)
 		{
-			throw runtime_error("Mutex-error: Failed at destruction");
+			char * error = "Underlying mutex <lock> failed";
+			MP_RETURN_OR_THROW_EX(retval, std::runtime_error, error);
 		}
 	}
 
-	void lock()
-	{
-		if(pthread_mutex_lock(&_mutex) < 0)
-		{
-			throw runtime_error("Mutex-error: Failed to lock");
-		}
-	}
-
-	bool tryLock()
+	inline bool tryLock()
 	{
 		return (pthread_mutex_trylock(&_mutex) == 0)?true:false;
 	}
 
-	void unlock()
+	inline void unlock()
 	{
-		if(pthread_mutex_unlock(&_mutex) < 0)
+		int retval = pthread_mutex_unlock(&_mutex);
+		if(retval != 0)
 		{
-			throw runtime_error("Mutex-error: Failed to unlock");
+			char * error = "Underlying mutex <unlock> failed";
+			MP_RETURN_OR_THROW_EX(retval, std::runtime_error, error);
 		}
 	}
 
-private:
-	//D'ont allow copy constructor/assignment
-	Mutex(const Mutex & mutex);
-	Mutex & operator=(const Mutex & mutex);
+private: // Methods
+	mutex(const mutex & mutex); // D'ont allow copy constructor
+	mutex & operator=(const mutex & mutex); // D'ont allow copy assignment
 
-//Members
-private:
+private: // Members
 	pthread_mutex_t _mutex;
 };
+}
 
 
-#endif /* MODERNPOSIX_INCLUDE_MUTEX_HPP_ */
+#endif /* MP_MUTEX_HPP */

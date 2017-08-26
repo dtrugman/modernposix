@@ -15,7 +15,7 @@ TEST_CASE("Mutex locking and unlocking", "[mutex]")
 {
 	SECTION("Mutex try-locking")
 	{
-		Mutex * myMutex = new Mutex();
+		mp::mutex * myMutex = new mp::mutex();
 
 		bool isLocked = myMutex->tryLock();
 		if(isLocked)
@@ -28,7 +28,7 @@ TEST_CASE("Mutex locking and unlocking", "[mutex]")
 
 	SECTION("Mutex try-locking on locked mutex")
 	{
-		Mutex * myMutex = new Mutex();
+		mp::mutex * myMutex = new mp::mutex();
 
 		myMutex->lock();
 

@@ -13,7 +13,7 @@ using namespace std;
 
 int main()
 {
-	Mutex * myMutex = new Mutex();
+	mp::mutex * myMutex = new mp::mutex();
 
 	myMutex->lock();
 	cout << "We locked a mutex";
