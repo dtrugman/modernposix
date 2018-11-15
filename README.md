@@ -105,6 +105,33 @@ catch (std::runtime_error & ex)
 }
 ```
 
+## Working directory wrapper
+
+This class wraps `getcwd` and `chdir` so it will be possible to use them directly with std::string variables.
+
+Again, this wrapper helps us avoid raw cstrings in our program.
+
+Find a working example @ examples/workdir.cpp. Simple usage example:
+
+```cpp
+try
+{
+    string initial_workdir;
+    mp::workdir::getcwd(initial_workdir);
+
+    string new_workdir("/tmp")
+    mp::workdir::chdir(new_workdir);
+
+    // Do stuff...
+
+    mp::workdir::chdir(initial_workdir);
+}
+catch (std::runtime_error & ex)
+{
+    // Something went wrong and ex.what() will tell you what it is
+}
+```
+
 ## Installation
 
 Just add the files from the include directory to your project and compile.

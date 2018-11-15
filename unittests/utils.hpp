@@ -28,15 +28,23 @@
 
 #ifdef MP_NO_THROW
     #define REQUIRE_INIT_FAILURE(type, ex, ...) \
-        type * t = NULL; \
-        REQUIRE_NOTHROW(t = new type(__VA_ARGS__)); \
-        REQUIRE_FALSE(*t); \
-        delete t;
+        type * __type_instance = NULL; \
+        REQUIRE_NOTHROW(__type_instance = new type(__VA_ARGS__)); \
+        REQUIRE_FALSE(*__type_instance); \
+        delete __type_instance;
+
+    #define REQUIRE_CALL_FAILURE(rettype, retval, func, ex, ...) \
+        rettype __func_retval; \
+        REQUIRE_NOTHROW(__func_retval = (rettype)func(__VA_ARGS__)); \
+        REQUIRE(__func_retval == retval);
 #else // MP_NO_THROW
     #define REQUIRE_INIT_FAILURE(type, ex, ...) \
-        type * t = NULL; \
-        REQUIRE_THROWS_AS(t = new type(__VA_ARGS__), ex); \
-        delete t;
+        type * __type_instance = NULL; \
+        REQUIRE_THROWS_AS(__type_instance = new type(__VA_ARGS__), ex); \
+        delete __type_instance;
+
+    #define REQUIRE_CALL_FAILURE(func, ex, ...) \
+        REQUIRE_THROWS_AS((void)func(__VA_ARGS__), ex);
 #endif // MP_NO_THROW
 
 #endif // MP_UNITTEST_UTILS_HPP
