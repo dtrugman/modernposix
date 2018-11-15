@@ -27,7 +27,7 @@ namespace mp
  * the library handles errors by returning NULL values
  * or failing subsequent operations
  */
-//#define MP_NO_THROW
+#define MP_NO_THROW
 
 #ifdef MP_NO_THROW
     #define MP_RETURN_OR_THROW_EX(retval, type, ...) return retval
