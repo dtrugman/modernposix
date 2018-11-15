@@ -47,8 +47,8 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
 
         SECTION("Load unexisting")
         {
-            Multiply multiply;
-            REQUIRE_THROWS_AS(multiply = (Multiply)dlib.symbol(NON_EXISTING_SYMBOL), std::runtime_error);
+            REQUIRE_CALL_FAILURE(Multiply, NULL, dlib.symbol,
+                                 std::runtime_error, NON_EXISTING_SYMBOL);
         }
 
         SECTION("Use")
@@ -80,8 +80,8 @@ TEST_CASE("Dynamic library", "[dynamiclib]")
 
         SECTION("Load unexisting")
         {
-            Create create;
-            REQUIRE_THROWS_AS(create = (Create)dlib.symbol(NON_EXISTING_SYMBOL), std::runtime_error);
+            REQUIRE_CALL_FAILURE(Create, NULL, dlib.symbol,
+                                 std::runtime_error, NON_EXISTING_SYMBOL);
         }
 
         SECTION("Use")
