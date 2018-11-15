@@ -4,7 +4,8 @@
 
 Over the years, I have met many programmers that complain about using the POSIX API in CPP.
 
-Every time they tried to integrate it into their projects the results were real nasty.
+Every time they wrote a bunch of code to create a switch fabric between the API and their CPP code,
+spending much time and resources on what should have been already there for them.
 
 This led me into writing this library, so that anyone can have a much more intuitive API to the most common methods.
 
@@ -16,15 +17,29 @@ This led me into writing this library, so that anyone can have a much more intui
 
 Following the CPP naming convention, I use the name pstream as in 'Process stream'.
 
-We have two different pstreams, an input stream (ipstream) and an output stream (opstream).
+We have two different pstreams, an input stream (`ipstream`) and an output stream (`opstream`).
 
-The streams handle the underlying file descriptors and spare the hassle from you (the programmer).
+The streams handle the underlying file descriptors and spares the hassle from you (the programmer).
 
 ### Input process stream (ipstream) example
 
-The following snippet executes the 'ls -l' command and stores the output into a vector of strings.
+The following snippet executes the `ls -l` command and stores the output into a vector of strings.
 
-Find some working examples @ examples/pstream.cpp. Simple usage example:
+Find some working examples @ `examples/pstream.cpp`. Simple usage example:
+
+```cpp
+mp::ipstream reader("ls -l");
+if (!reader)
+{
+    cerr << reader.error() << endl;
+    return; // Or handle error otherwise
+}
+
+vector<string> output;
+reader >> output;
+```
+
+Or, when using exceptions:
 
 ```cpp
 try
@@ -42,18 +57,33 @@ catch (std::runtime_error & ex)
 
 ### Output process stream (opstream) example
 
-The following snippet executes the 'wall' broadcast command and writes a message.
+The following snippet executes the `wall` broadcast command and writes a message.
 
 Upon destruction the writer closes the stream and flushes the content.
 
-Find some working examples @ examples/pstream.cpp. Simple usage example:
+Find some working examples @ `examples/pstream.cpp`. Simple usage example:
+
+```cpp
+mp::opstream writer("wall");
+if (!writer)
+{
+    cerr << writer.error() << endl;
+    return; // Or handle error otherwise
+}
+
+// String splitted only as an example
+writer << "testing modern output popen" << "\n";
+```
+
+Or, when using exceptions:
 
 ```cpp
 try
 {
     mp::opstream writer("wall");
 
-    writer << "testing" << " " << "modern output popen" << "\n";
+    // String splitted only as an example
+    writer << "testing modern output popen" << "\n";
 }
 catch (std::runtime_error & ex)
 {
@@ -63,13 +93,33 @@ catch (std::runtime_error & ex)
 
 ## Dynamic library wrapper
 
-This class simply wraps the dlopen(), dlsym(), dlclose() & dlerror() APIs, allowing easy access to dynamic libraries.
+This class wraps `dlopen()`, `dlsym()`, `dlclose()` & `dlerror()` APIs, allowing easy access to dynamic libraries.
 
 The class assures that the library is closed upon destruction.
 
 You can also specify the type of initilization you require upon construction, default is LAZY and LOCAL, see `man dlopen(3)` for more information.
 
-Find some working examples @ examples/dynamiclib.cpp. Simple usage example:
+Find some working examples @ `examples/dynamiclib.cpp`. Simple usage example:
+
+```cpp
+mp::dynamiclib dlib(TEST_LIB_C);
+if (!dlib)
+{
+    cerr << dlib.error() << endl;
+    return; // Or handle error otherwise
+}
+
+Multiply multiply = (Multiply)dlib.symbol(TEST_LIB_C_MULTIPLY);
+if (!multiply)
+{
+    cerr << dlib.error() << endl;
+    return; // Or handle error otherwise
+}
+
+multiply(a,b);
+```
+
+Or, when using exceptions:
 
 ```cpp
 try
@@ -86,11 +136,25 @@ catch (std::runtime_error & ex)
 
 ## Directory stream wrapper
 
-This class simply wraps the opendir(), readdir(), rewinddir() & closedir() APIs, allowing easy access to directory entry enumeration.
+This class simply wraps the `opendir()`, `readdir()`, `rewinddir()` & `closedir()` APIs, allowing easy access to directory entry enumeration.
 
 It assures proper handling of the underlying resources upon destruction.
 
-Find some working examples @ examples/dstream.cpp. Simple usage example:
+Find some working examples @ `examples/dstream.cpp`. Simple usage example:
+
+```cpp
+mp::idstream ds(TEST_DIR);
+if (!ds)
+{
+    cerr << ds.error() << endl;
+    return; // Or handle error otherwise
+}
+
+set<string> output;
+ds >> output;
+```
+
+Or, when using exceptions:
 
 ```cpp
 try
@@ -111,7 +175,33 @@ This class wraps `getcwd` and `chdir` so it will be possible to use them directl
 
 Again, this wrapper helps us avoid raw cstrings in our program.
 
-Find a working example @ examples/workdir.cpp. Simple usage example:
+Find a working example @ `examples/workdir.cpp`. Simple usage example:
+
+```cpp
+string initial_workdir;
+if (!mp::workdir::getcwd(initial_workdir))
+{
+    cerr << mp::workdir::error() << endl;
+    return; // Or handle error otherwise
+}
+
+string new_workdir("/tmp")
+if (!mp::workdir::chdir(new_workdir))
+{
+    cerr << mp::workdir::error() << endl;
+    return; // Or handle error otherwise
+}
+
+// Do stuff...
+
+if (!mp::workdir::chdir(initial_workdir))
+{
+    cerr << mp::workdir::error() << endl;
+    return; // Or handle error otherwise
+}
+```
+
+Or, when using exceptions:
 
 ```cpp
 try
@@ -156,7 +246,7 @@ scons test
 
 ## License
 
-Copyright 2017 Daniel Trugman
+Copyright 2018 Daniel Trugman
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
