@@ -21,7 +21,9 @@
 
 #include <linux/limits.h>
 
+#include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <string>
 
@@ -53,6 +55,11 @@ public:
         }
 
         return true;
+    }
+
+    static std::string error()
+    {
+        return std::string(strerror(errno));
     }
 };
 

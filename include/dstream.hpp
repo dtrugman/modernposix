@@ -85,9 +85,9 @@ protected: // C'tors
     }
 
 protected: // Methods
-    inline const char * error()
+    inline std::string error() const
     {
-        return strerror(errno);
+        return std::string(strerror(errno));
     }
 
 protected: // Members
