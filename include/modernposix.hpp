@@ -17,8 +17,6 @@
 #ifndef MP_MODERN_POSIX_HPP
 #define MP_MODERN_POSIX_HPP
 
-#include <stdexcept>
-
 namespace mp
 {
 
@@ -32,6 +30,7 @@ namespace mp
 #ifdef MP_NO_THROW
     #define MP_RETURN_OR_THROW_EX(retval, type, ...) return retval
 #else
+    #include <stdexcept>
     #define MP_RETURN_OR_THROW_EX(retval, type, ...) throw type(__VA_ARGS__)
 #endif
 
