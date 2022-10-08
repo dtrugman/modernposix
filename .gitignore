@@ -23,13 +23,17 @@
 *.a
 *.lib
 
-# Executables
+# Generated files
 *.exe
 *.out
 *.app
 
-# SCons files
-.sconsign.dblite
+# [C]Make
+Makefile
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
 
-# VS.code files
-.vscode
+# Artifacts
+lib/*
+out/*
