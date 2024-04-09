@@ -75,7 +75,7 @@ The following snippet loads a shared library written in C and calls one of its e
 try
 {
     mp::dynamiclib dlib(TEST_LIB_C);
-    multiply_fp multiply = (multiply_fp)dlib.symbol(TEST_LIB_C_MULTIPLY);
+    multiply_fp multiply = static_cast<multiply_fp>(dlib.symbol(TEST_LIB_C_MULTIPLY));
     multiply(a,b);
 }
 catch (std::runtime_error& ex)
@@ -105,7 +105,9 @@ catch (std::runtime_error & ex)
 
 ## Working directory wrapper
 
-This snippet shows how an application can change its working directory, run a few commands and then change it back to the original one:
+This snippet shows how an application can change its working directory just for a few commands. When you leave the scope, it will change the directory straight back.
+
+You can also use `mp::workdir::chdir` directly if you want.
 
 ```cpp
 try
@@ -113,12 +115,9 @@ try
     string initial_workdir;
     mp::workdir::getcwd(initial_workdir);
 
-    string new_workdir("/tmp")
-    mp::workdir::chdir(new_workdir);
+    mp::workdir::pushd("/tmp");
 
     // Do stuff...
-
-    mp::workdir::chdir(initial_workdir);
 }
 catch (std::runtime_error & ex)
 {
