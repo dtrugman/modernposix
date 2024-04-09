@@ -49,6 +49,24 @@ inline void chdir(const std::string& dir)
     }
 }
 
+class pushd
+{
+public:
+    pushd(const std::string& dir)
+        : _prev(getcwd())
+    {
+        chdir(dir);
+    }
+
+    ~pushd()
+    {
+        chdir(_prev);
+    }
+
+private:
+    const std::string _prev;
+};
+
 } // namespace workdir
 } // namespace mp
 

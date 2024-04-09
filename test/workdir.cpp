@@ -38,5 +38,17 @@ TEST_CASE("Working directory", "[workdir]")
         REQUIRE_NOTHROW(mp::workdir::chdir(initial_workdir));
         REQUIRE(mp::workdir::getcwd() == initial_workdir);
     }
+
+    SECTION("Use pushd")
+    {
+        std::string initial_workdir = mp::workdir::getcwd();
+
+        {
+            mp::workdir::pushd dir(TEMP_DIR);
+            REQUIRE(mp::workdir::getcwd() == TEMP_DIR);
+        }
+
+        REQUIRE(mp::workdir::getcwd() == initial_workdir);
+    }
 }
 
